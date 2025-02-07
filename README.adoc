@@ -7,16 +7,21 @@ image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/
 image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/compile-examples.yml/badge.svg["Compile Examples status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/compile-examples.yml"]
 image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml/badge.svg["Spell Check status", link="https://github.com/{repository-owner}/{repository-name}/actions/workflows/spell-check.yml"]
 
+== This fork ==
+
 **DISCLAIMER**: This is a FORK of the original library with additional methods that allow for checking whether the USB host is receiving data or not. In the original implementation a call to `write()`, and by extension `sendMIDI()` would cause the program to block. I aimed to expose a couple other functions that should make handling this possible.
 
-For now, it only works with [Levi--G's USB API for STM32](https://github.com/Levi--G/USBLibrarySTM32) on an STM32F103. Some methods depend on functions declared by Levi--G that are not available for other USB APIs. If I figure out how to make it work without depending on their implementation-specific libraries (possibly via some defined macros), I'll update the library accordingly. For now, I didn't have the need or time, so it will only work with that library.
+For now, it only works with https://github.com/Levi--G/USBLibrarySTM32[Levi--G's USB API for STM32] on an STM32F103. Some methods depend on functions declared by Levi--G that are not available for other USB APIs. If I figure out how to make it work without depending on their implementation-specific libraries (possibly via some defined macros), I'll update the library accordingly. For now, I didn't have the need or time, so it will only work with that library.
 
 This fork's additions:
-- `bool MIDIUSB::availableTx()` - returns whether the USB host is receiving sent data, will turn `false` after the first unread packet. (works only with `Levi--G's USB API for STM32`)
-- `void MIDIUSB::sendMIDIQuick(midiEventPacket_t)` - replaces `write()` call in the original method with `writeQuick()`. (works only with `Levi--G's USB API for STM32`)
-- `size_t MIDIUSB::writeQuick(const uint8_t* buffer, size_t size)` - writes data to the USB endpoint but uses Levi--G's `USB_SendQuick()` instead of the original blocking `USB_Send()`. Combined with `MIDIUSB::availableTx()` you can prevent blocking. You'll achieve the desired non-blocking behavior if you prevent USB flushing on subsequent `USB_SendQuick` calls. (works only with `Levi--G's USB API for STM32`)
-- `uint8_t MIDIUSB::getMIDIRxEndpoint()` - returns the MIDI RX USB endpoint.
-- `uint8_t MIDIUSB::getMIDITxEndpoint()` - returns the MIDI TX USB endpoint. Comes in handy for some USB API methods.
+
+* `bool MIDIUSB::availableTx()` - returns whether the USB host is receiving sent data, will turn `false` after the first unread packet. (works only with `Levi--G's USB API for STM32`)
+* `void MIDIUSB::sendMIDIQuick(midiEventPacket_t)` - replaces `write()` call in the original method with `writeQuick()`. (works only with `Levi--G's USB API for STM32`)
+* `size_t MIDIUSB::writeQuick(const uint8_t* buffer, size_t size)` - writes data to the USB endpoint but uses Levi--G's `USB_SendQuick()` instead of the original blocking `USB_Send()`. Combined with `MIDIUSB::availableTx()` you can prevent blocking. You'll achieve the desired non-blocking behavior if you prevent USB flushing on subsequent `USB_SendQuick` calls. (works only with `Levi--G's USB API for STM32`)
+* `uint8_t MIDIUSB::getMIDIRxEndpoint()` - returns the MIDI RX USB endpoint.
+* `uint8_t MIDIUSB::getMIDITxEndpoint()` - returns the MIDI TX USB endpoint. Comes in handy for some USB API methods.
+
+== Description ==
 
 This library allows an Arduino board with USB capabilities to act as a MIDI instrument over USB. The library is based on PluggableUSB, so is only compatible with Arduino IDE 1.6.6 and newer.
 
