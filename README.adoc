@@ -9,7 +9,7 @@ image:https://github.com/{repository-owner}/{repository-name}/actions/workflows/
 
 **DISCLAIMER**: This is a FORK of the original library with additional methods that allow for checking whether the USB host is receiving data or not. In the original implementation a call to `write()`, and by extension `sendMIDI()` would cause the program to block. I aimed to expose a couple other functions that should make handling this possible.
 
-I've only tested it on STM32F103, so YMMV. I wrote it with a focus on interoperability with [Levi--G's USB API for STM32](https://github.com/Levi--G/USBLibrarySTM32), so some methods might not be available for other USB APIs.
+For now, it only works with [Levi--G's USB API for STM32](https://github.com/Levi--G/USBLibrarySTM32) on an STM32F103. Some methods depend on functions declared by Levi--G that are not available for other USB APIs. If I figure out how to make it work without depending on their implementation-specific libraries (possibly via some defined macros), I'll update the library accordingly. For now, I didn't have the need or time, so it will only work with that library.
 
 This fork's additions:
 - `bool MIDIUSB::availableTx()` - returns whether the USB host is receiving sent data, will turn `false` after the first unread packet. (works only with `Levi--G's USB API for STM32`)

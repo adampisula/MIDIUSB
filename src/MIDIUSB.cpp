@@ -211,15 +211,15 @@ uint8_t MIDI_::getMIDITxEndpoint(void)
 	return MIDI_TX;
 }
 
-#if defined(USB_SendAvailable)
+// #if defined(USB_SendAvailable)
 bool MIDI_::availableTx(void)
 {
 	return USB_SendAvailable(MIDI_TX);
 }
-#endif
+// #endif
 
-#if defined(USB_SendQuick)
-void sendMIDIQuick(midiEventPacket_t event)
+// #if defined(USB_SendQuick)
+void MIDI_::sendMIDIQuick(midiEventPacket_t event)
 {
 	uint8_t data[4];
 	data[0] = event.header;
@@ -229,7 +229,7 @@ void sendMIDIQuick(midiEventPacket_t event)
 	writeQuick(data, 4);
 }
 
-size_t writeQuick(const uint8_t *buffer, size_t size)
+size_t MIDI_::writeQuick(const uint8_t *buffer, size_t size)
 {
 	if (is_write_enabled(MIDI_TX))
 	{
@@ -246,7 +246,7 @@ size_t writeQuick(const uint8_t *buffer, size_t size)
 	}
 	return 0;
 }
-#endif
+// #endif
 
 MIDI_::MIDI_(void) : PluggableUSBModule(2, 2, epType)
 {
