@@ -242,6 +242,25 @@ public:
 	void sendMIDI(midiEventPacket_t event);
 	/// Sends a MIDI buffer of length size to USB
 	size_t write(const uint8_t *buffer, size_t size);
+
+	/// Returns MIDI USB RX endpoint
+	uint8_t getMIDIRxEndpoint(void);
+	/// Returns MIDI USB TX endpoint
+	uint8_t getMIDITxEndpoint(void);
+
+	/// Returns whether TX is available for writing (only available for USB STM32)
+	#if defined(USB_SendAvailable)
+	bool availableTx(void);
+	#endif
+
+	/// Non-blocking versions of sendMIDI() and write()
+	#if defined(USB_SendQuick)
+	/// Sends a MIDI message to USB without blocking
+	void sendMIDIQuick(midiEventPacket_t event);
+	/// Sends a MIDI buffer of length size to USB without blocking
+	size_t writeQuick(const uint8_t *buffer, size_t size);
+	#endif
+
 	/// NIY
 	operator bool();
 };
